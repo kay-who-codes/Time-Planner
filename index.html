@@ -1,21 +1,16 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.app{padding:1rem;background:#111;min-height:100vh;color:#e8e8e6}
-.top-bar{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
-.top-bar h1{font-size:18px;font-weight:500;color:#e8e8e6;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between}
-.live-clock{font-size:15px;font-weight:400;color:#5ecfa8;font-variant-numeric:tabular-nums}
-.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.row label{font-size:13px;color:#888;white-space:nowrap}
-input[type="time"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px}
-input[type="time"]:focus{outline:none;border-color:#6b8fff}
-input[type="text"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px;width:180px}
-input[type="text"]:focus{outline:none;border-color:#6b8fff}
-input[type="number"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px;width:80px}
-input[type="number"]:focus{outline:none;border-color:#6b8fff}
+.app{padding:1rem;background:#111;min-height:100vh;color:#e8e8e6;font-family:sans-serif}
+.card{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+label{font-size:13px;color:#888;white-space:nowrap}
+input[type="time"],input[type="text"],input[type="number"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px}
+input[type="time"]:focus,input[type="text"]:focus,input[type="number"]:focus{outline:none;border-color:#6b8fff}
+input[type="text"]{width:170px}
+input[type="number"]{width:78px}
 .btn{background:#252525;border:0.5px solid #555;border-radius:8px;color:#e8e8e6;padding:0 14px;font-size:13px;height:36px;cursor:pointer;white-space:nowrap;transition:background .15s}
-.btn:hover{background:#333}
+.btn:hover{background:#303030}
 .btn:active{transform:scale(.98)}
 .btn-accent{background:#2d3f7a;border-color:#4a62cc;color:#aec0ff}
 .btn-accent:hover{background:#374a8f}
@@ -24,181 +19,249 @@ input[type="number"]:focus{outline:none;border-color:#6b8fff}
 .btn-danger:hover{background:#4a2020}
 .btn-success{background:#1a3020;border-color:#2e6e40;color:#7ee8a2}
 .btn-success:hover{background:#204030}
+.btn-warn{background:#2a2000;border-color:#5c4400;color:#f0b429}
+.btn-warn:hover{background:#333000}
+.sec-label{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
 .totals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
 .metric{background:#1a1a1a;border:0.5px solid #333;border-radius:10px;padding:.85rem 1rem}
 .metric .lbl{font-size:12px;color:#666;margin-bottom:4px}
 .metric .val{font-size:22px;font-weight:500}
-.metric .val.task{color:#6b8fff}
-.metric .val.free{color:#5ecfa8}
-.section-label{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
-.timeline{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem;margin-bottom:1rem}
-.segment{border-radius:8px;padding:10px 14px;margin-bottom:6px;position:relative;display:flex;align-items:center;gap:12px}
+.val-task{color:#6b8fff}
+.val-free{color:#5ecfa8}
+.live-clock{font-size:15px;font-weight:400;color:#5ecfa8;font-variant-numeric:tabular-nums}
+.phase-tabs{display:flex;gap:6px;margin-bottom:1rem}
+.tab{flex:1;padding:10px;border-radius:10px;border:0.5px solid #333;background:#1a1a1a;color:#666;font-size:13px;cursor:pointer;text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.tab.active{background:#1e2240;border-color:#4a62cc;color:#aec0ff}
+.tab .tab-num{width:20px;height:20px;border-radius:50%;background:#252525;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tab.active .tab-num{background:#4a62cc;color:#fff}
+.tab.done-tab .tab-num{background:#2e6e40;color:#7ee8a2}
+.unscheduled-item{background:#1e1e1e;border:0.5px solid #333;border-radius:10px;padding:.75rem 1rem;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.unscheduled-item.scheduling{border-color:#4a62cc;background:#1e2240}
+.task-name-lbl{font-size:14px;font-weight:500;color:#e8e8e6;flex:1;min-width:100px}
+.task-dur-lbl{font-size:12px;color:#666;white-space:nowrap}
+.inline-time-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.badge-unscheduled{font-size:11px;background:#2a2000;color:#f0b429;border-radius:4px;padding:2px 7px;border:0.5px solid #5c4400}
+.badge-scheduled{font-size:11px;background:#1a3020;color:#7ee8a2;border-radius:4px;padding:2px 7px;border:0.5px solid #2e6e40}
+.conflict-msg{background:#2a1a1a;border:0.5px solid #6e2e2e;border-radius:8px;padding:8px 12px;font-size:12px;color:#f09595;margin-bottom:.75rem}
+.segment{border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
 .segment:last-child{margin-bottom:0}
 .segment.free{background:#1d2520;border:0.5px solid #2a3d2f}
-.segment.free.past{background:#181e18;border-color:#232d23;opacity:.55}
-.segment.free .seg-label{color:#5ecfa8;font-size:14px;font-weight:500}
-.segment.current-indicator{background:#2a2000;border:0.5px solid #5c4400;border-radius:8px;padding:6px 14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;font-size:12px;color:#f0b429}
+.segment.free.past{opacity:.5}
 .segment.task-seg{background:#1e2240;border:0.5px solid #2e3a6e}
-.segment.task-seg.past{background:#1a1c28;border-color:#262a40;opacity:.6}
-.segment.task-seg.active-now{background:#20285a;border:1px solid #6b8fff;box-shadow:0 0 0 1px #6b8fff22}
+.segment.task-seg.past{opacity:.55}
+.segment.task-seg.active-now{background:#20285a;border:1px solid #6b8fff}
 .segment.task-seg.done{background:#222;border-color:#333;opacity:.6}
-.segment.task-seg .seg-label{color:#aec0ff;font-size:14px;font-weight:500}
-.segment.task-seg.done .seg-label{text-decoration:line-through;color:#666}
-.seg-time{font-size:12px;color:#555;min-width:120px}
+.seg-label{font-size:14px;font-weight:500}
+.seg-label.free-lbl{color:#5ecfa8}
+.seg-label.task-lbl{color:#aec0ff}
+.seg-label.done-lbl{text-decoration:line-through;color:#555}
+.seg-time{font-size:12px;color:#555}
 .seg-dur{font-size:12px;color:#666;margin-left:auto;white-space:nowrap}
 .seg-actions{display:flex;gap:6px;margin-left:8px}
-.add-task-panel{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem;margin-bottom:1rem}
 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.dot.free{background:#5ecfa8}
-.dot.task{background:#6b8fff}
-.dot.done{background:#444}
-.dot.now{background:#f0b429}
-.free-placeholder{padding:2rem;text-align:center;color:#444;font-size:13px}
-.task-list{margin-bottom:1rem}
-.task-item{background:#1a1a1a;border:0.5px solid #333;border-radius:10px;padding:.75rem 1rem;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.task-name{font-size:14px;font-weight:500;color:#e8e8e6;flex:1;min-width:120px}
-.task-name.done{text-decoration:line-through;color:#555}
-.task-meta{font-size:12px;color:#666}
-.conflict{background:#2a1a1a;border:0.5px solid #6e2e2e;border-radius:8px;padding:8px 12px;font-size:12px;color:#f09595;margin-bottom:.75rem}
+.dot-free{background:#5ecfa8}
+.dot-task{background:#6b8fff}
+.dot-done{background:#444}
+.dot-now{background:#f0b429}
+.empty-state{padding:2rem;text-align:center;color:#444;font-size:13px}
 .progress-bar-wrap{height:3px;background:#2a2a2a;border-radius:2px;margin-top:6px;overflow:hidden}
-.progress-bar{height:3px;border-radius:2px;background:#6b8fff;transition:width .5s linear}
+.progress-bar{height:3px;border-radius:2px;background:#6b8fff}
 .window-progress-wrap{height:3px;background:#252525;border-radius:2px;margin-top:.6rem;overflow:hidden}
-.window-progress{height:3px;border-radius:2px;background:#5ecfa8;transition:width 1s linear}
+.window-progress{height:3px;border-radius:2px;background:#5ecfa8}
+.hint{font-size:12px;color:#555;margin-top:.5rem}
 </style>
 
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Time planner — add tasks and see your live schedule</h2>
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Time planner — plan tasks then schedule them</h2>
 
 <div class="app">
-  <div class="top-bar">
-    <h1>
-      <span><i class="ti ti-clock" aria-hidden="true" style="margin-right:8px;font-size:18px;vertical-align:-2px"></i>Time planner</span>
-      <span class="live-clock" id="liveClock" aria-live="polite"></span>
-    </h1>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <div style="font-size:18px;font-weight:500;color:#e8e8e6"><i class="ti ti-clock" aria-hidden="true" style="margin-right:8px;vertical-align:-2px"></i>Time planner</div>
+      <div class="live-clock" id="liveClock"></div>
+    </div>
     <div class="row">
       <label>Window start</label>
-      <input type="time" id="startTime" />
+      <input type="time" id="startTime"/>
       <label>Window end</label>
-      <input type="time" id="endTime" />
+      <input type="time" id="endTime"/>
       <button class="btn btn-accent" onclick="setWindow()"><i class="ti ti-check" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>Set window</button>
     </div>
-    <div id="windowInfo" style="margin-top:.6rem;font-size:13px;color:#666"></div>
-    <div class="window-progress-wrap" id="windowProgressWrap" style="display:none">
-      <div class="window-progress" id="windowProgress"></div>
-    </div>
+    <div id="windowInfo" style="font-size:13px;color:#666;margin-top:.5rem"></div>
+    <div class="window-progress-wrap" id="wpWrap" style="display:none"><div class="window-progress" id="wp"></div></div>
   </div>
 
   <div class="totals">
-    <div class="metric">
-      <div class="lbl">Total task time</div>
-      <div class="val task" id="totalTask">0h 0m</div>
-    </div>
-    <div class="metric">
-      <div class="lbl">Total free time</div>
-      <div class="val free" id="totalFree">—</div>
-    </div>
+    <div class="metric"><div class="lbl">Total task time</div><div class="val val-task" id="totalTask">0m</div></div>
+    <div class="metric"><div class="lbl">Total free time</div><div class="val val-free" id="totalFree">—</div></div>
   </div>
 
-  <div class="add-task-panel">
-    <div class="section-label" style="margin-bottom:.75rem">Add task</div>
-    <div id="conflictMsg"></div>
-    <div class="row" style="flex-wrap:wrap;gap:8px">
-      <input type="text" id="taskName" placeholder="Task name" />
-      <input type="number" id="taskDur" placeholder="mins" min="1" max="1440" />
-      <label style="font-size:13px;color:#888">starting at</label>
-      <input type="time" id="taskStart" />
-      <button class="btn btn-accent" onclick="addTask()"><i class="ti ti-plus" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>Add task</button>
+  <div class="phase-tabs">
+    <div class="tab active" id="tab1" onclick="switchPhase(1)">
+      <div class="tab-num" id="tabNum1">1</div>
+      <span>Add tasks</span>
+    </div>
+    <div class="tab" id="tab2" onclick="switchPhase(2)">
+      <div class="tab-num" id="tabNum2">2</div>
+      <span>Schedule tasks</span>
+    </div>
+    <div class="tab" id="tab3" onclick="switchPhase(3)">
+      <div class="tab-num" id="tabNum3">3</div>
+      <span>Timeline</span>
     </div>
   </div>
 
-  <div id="taskListSection" style="display:none">
-    <div class="section-label">Tasks</div>
-    <div class="task-list" id="taskList"></div>
+  <div id="phase1">
+    <div class="card">
+      <div class="sec-label">New task</div>
+      <div class="row">
+        <input type="text" id="taskName" placeholder="Task name"/>
+        <input type="number" id="taskDur" placeholder="mins" min="1" max="1440"/>
+        <button class="btn btn-accent" onclick="addTask()"><i class="ti ti-plus" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>Add task</button>
+      </div>
+    </div>
+    <div id="p1List"></div>
+    <div id="p1Empty" class="empty-state"><i class="ti ti-list" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Add tasks above, then move to step 2 to schedule them.</div>
+    <div id="goStep2Wrap" style="display:none;margin-top:.5rem">
+      <button class="btn btn-accent" style="width:100%;justify-content:center;display:flex;align-items:center;gap:6px" onclick="switchPhase(2)">
+        <i class="ti ti-arrow-right" aria-hidden="true"></i> Schedule tasks
+      </button>
+    </div>
   </div>
 
-  <div class="section-label">Timeline</div>
-  <div class="timeline" id="timeline">
-    <div class="free-placeholder"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set your time window to get started</div>
+  <div id="phase2" style="display:none">
+    <div id="schedConflict"></div>
+    <div id="p2List"></div>
+    <div id="p2Empty" class="empty-state"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>No tasks yet — go back to step 1 to add some.</div>
+    <div id="goStep3Wrap" style="display:none;margin-top:.5rem">
+      <button class="btn btn-accent" style="width:100%;justify-content:center;display:flex;align-items:center;gap:6px" onclick="switchPhase(3)">
+        <i class="ti ti-layout-list" aria-hidden="true"></i> View timeline
+      </button>
+    </div>
   </div>
+
+  <div id="phase3" style="display:none">
+    <div class="card" id="timeline">
+      <div class="empty-state"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set a window and schedule some tasks to see the timeline.</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-let windowStart=null, windowEnd=null, tasks=[], tickInterval=null;
+let windowStart=null,windowEnd=null,tasks=[],currentPhase=1,editingId=null;
 
-function nowMins(){
-  const n=new Date();
-  return n.getHours()*60+n.getMinutes();
-}
-function nowSecs(){
-  const n=new Date();
-  return n.getHours()*3600+n.getMinutes()*60+n.getSeconds();
-}
+function nowMins(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+function nowSecs(){const n=new Date();return n.getHours()*3600+n.getMinutes()*60+n.getSeconds();}
 function toMins(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
 function fromMins(m){return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 function fmtDur(m){const h=Math.floor(m/60),mn=m%60;if(h===0)return mn+'m';if(mn===0)return h+'h';return h+'h '+mn+'m';}
 function fmtTime(t){const[h,m]=t.split(':').map(Number);const ap=h>=12?'pm':'am';return(h%12||12)+':'+(String(m).padStart(2,'0'))+ap;}
-function fmtTimeFull(d){
-  const h=d.getHours(),m=d.getMinutes(),s=d.getSeconds();
-  const ap=h>=12?'pm':'am';
-  return(h%12||12)+':'+(String(m).padStart(2,'0'))+':'+(String(s).padStart(2,'0'))+ap;
-}
+function fmtTimeFull(d){const h=d.getHours(),m=d.getMinutes(),s=d.getSeconds();const ap=h>=12?'pm':'am';return(h%12||12)+':'+(String(m).padStart(2,'0'))+':'+(String(s).padStart(2,'0'))+ap;}
 
 function tick(){
   document.getElementById('liveClock').textContent=fmtTimeFull(new Date());
-  renderTimeline();
-  updateWindowProgress();
-}
-
-function updateWindowProgress(){
-  if(!windowStart||!windowEnd) return;
-  const ws=toMins(windowStart)*60, we=toMins(windowEnd)*60, ns=nowSecs();
-  const pct=Math.min(100,Math.max(0,((ns-ws)/(we-ws))*100));
-  document.getElementById('windowProgress').style.width=pct+'%';
+  if(currentPhase===3) renderTimeline();
+  if(windowStart&&windowEnd){
+    const ws=toMins(windowStart)*60,we=toMins(windowEnd)*60,ns=nowSecs();
+    const pct=Math.min(100,Math.max(0,((ns-ws)/(we-ws))*100));
+    document.getElementById('wp').style.width=pct.toFixed(1)+'%';
+  }
 }
 
 function setWindow(){
-  const s=document.getElementById('startTime').value;
-  const e=document.getElementById('endTime').value;
-  if(!s||!e){alert('Please set both start and end times.');return;}
+  const s=document.getElementById('startTime').value,e=document.getElementById('endTime').value;
+  if(!s||!e){alert('Set both start and end times.');return;}
   if(toMins(e)<=toMins(s)){alert('End time must be after start time.');return;}
-  windowStart=s; windowEnd=e;
-  tasks=tasks.filter(t=>t.startMins>=toMins(s)&&t.startMins+t.dur<=toMins(e));
-  document.getElementById('windowProgressWrap').style.display='block';
-  updateWindowProgress();
+  windowStart=s;windowEnd=e;
+  document.getElementById('windowInfo').textContent='Window: '+fmtTime(s)+' → '+fmtTime(e)+' ('+fmtDur(toMins(e)-toMins(s))+' total)';
+  document.getElementById('wpWrap').style.display='block';
+  tasks.forEach(t=>{
+    if(t.startMins!==null){
+      const wm=toMins(s),em=toMins(e);
+      if(t.startMins<wm||t.startMins+t.dur>em) t.startMins=null;
+    }
+  });
   render();
 }
 
 function addTask(){
-  if(!windowStart||!windowEnd){alert('Set your time window first.');return;}
   const name=document.getElementById('taskName').value.trim();
   const dur=parseInt(document.getElementById('taskDur').value);
-  const start=document.getElementById('taskStart').value;
-  document.getElementById('conflictMsg').innerHTML='';
   if(!name){alert('Enter a task name.');return;}
   if(!dur||dur<1){alert('Enter a duration in minutes.');return;}
-  if(!start){alert('Enter a start time.');return;}
-  const sm=toMins(start),wm=toMins(windowStart),em=toMins(windowEnd);
-  if(sm<wm||sm+dur>em){
-    document.getElementById('conflictMsg').innerHTML='<div class="conflict"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Task falls outside the time window ('+fmtTime(windowStart)+' – '+fmtTime(windowEnd)+').</div>';
-    return;
-  }
-  for(const t of tasks){
-    if(!(sm>=t.startMins+t.dur||sm+dur<=t.startMins)){
-      document.getElementById('conflictMsg').innerHTML='<div class="conflict"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Overlaps with "'+t.name+'" ('+fmtTime(fromMins(t.startMins))+' – '+fmtTime(fromMins(t.startMins+t.dur))+').</div>';
-      return;
-    }
-  }
-  tasks.push({id:Date.now(),name,dur,startMins:sm,done:false});
-  tasks.sort((a,b)=>a.startMins-b.startMins);
+  tasks.push({id:Date.now(),name,dur,startMins:null,done:false});
   document.getElementById('taskName').value='';
   document.getElementById('taskDur').value='';
-  document.getElementById('taskStart').value='';
   render();
 }
 
-function removeTask(id){tasks=tasks.filter(t=>t.id!==id);render();}
+function removeTask(id){tasks=tasks.filter(t=>t.id!==id);if(editingId===id)editingId=null;render();}
 function toggleDone(id){const t=tasks.find(t=>t.id===id);if(t)t.done=!t.done;render();}
 
-function render(){renderTotals();renderTimeline();renderTaskList();}
+function startEditing(id){
+  editingId=(editingId===id)?null:id;
+  document.getElementById('schedConflict').innerHTML='';
+  render();
+}
+
+function assignTime(id){
+  if(!windowStart||!windowEnd){alert('Set your time window first (step 1 top).');return;}
+  const inp=document.getElementById('timeInput_'+id);
+  if(!inp||!inp.value){alert('Pick a start time.');return;}
+  const t=tasks.find(t=>t.id===id);
+  if(!t) return;
+  const sm=toMins(inp.value),wm=toMins(windowStart),em=toMins(windowEnd);
+  document.getElementById('schedConflict').innerHTML='';
+  if(sm<wm||sm+t.dur>em){
+    document.getElementById('schedConflict').innerHTML='<div class="conflict-msg"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Falls outside the window ('+fmtTime(windowStart)+' – '+fmtTime(windowEnd)+').</div>';
+    return;
+  }
+  for(const other of tasks){
+    if(other.id===id||other.startMins===null) continue;
+    if(!(sm>=other.startMins+other.dur||sm+t.dur<=other.startMins)){
+      document.getElementById('schedConflict').innerHTML='<div class="conflict-msg"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Overlaps with "'+other.name+'" ('+fmtTime(fromMins(other.startMins))+' – '+fmtTime(fromMins(other.startMins+other.dur))+').</div>';
+      return;
+    }
+  }
+  t.startMins=sm;
+  editingId=null;
+  render();
+}
+
+function clearTime(id){const t=tasks.find(t=>t.id===id);if(t)t.startMins=null;editingId=null;render();}
+
+function switchPhase(n){
+  currentPhase=n;
+  document.getElementById('phase1').style.display=n===1?'block':'none';
+  document.getElementById('phase2').style.display=n===2?'block':'none';
+  document.getElementById('phase3').style.display=n===3?'block':'none';
+  [1,2,3].forEach(i=>{
+    document.getElementById('tab'+i).className='tab'+(i===n?' active':'');
+  });
+  render();
+}
+
+function render(){
+  renderTotals();
+  renderPhase1();
+  renderPhase2();
+  if(currentPhase===3) renderTimeline();
+  updateTabBadges();
+}
+
+function updateTabBadges(){
+  const scheduled=tasks.filter(t=>t.startMins!==null).length;
+  const total=tasks.length;
+  if(total>0&&scheduled===total){
+    document.getElementById('tabNum2').className='tab-num';
+    document.getElementById('tabNum2').style.background='#2e6e40';
+    document.getElementById('tabNum2').style.color='#7ee8a2';
+  } else {
+    document.getElementById('tabNum2').style.background='';
+    document.getElementById('tabNum2').style.color='';
+  }
+}
 
 function renderTotals(){
   const tm=tasks.reduce((s,t)=>s+t.dur,0);
@@ -206,108 +269,109 @@ function renderTotals(){
   if(windowStart&&windowEnd){
     const wm=toMins(windowEnd)-toMins(windowStart);
     document.getElementById('totalFree').textContent=fmtDur(Math.max(0,wm-tm));
-  } else {
-    document.getElementById('totalFree').textContent='—';
-  }
+  } else document.getElementById('totalFree').textContent='—';
 }
 
-function renderTaskList(){
-  const sec=document.getElementById('taskListSection');
-  const list=document.getElementById('taskList');
-  if(tasks.length===0){sec.style.display='none';return;}
-  sec.style.display='block';
+function renderPhase1(){
+  const list=document.getElementById('p1List');
+  const empty=document.getElementById('p1Empty');
+  const go=document.getElementById('goStep2Wrap');
+  if(tasks.length===0){list.innerHTML='';empty.style.display='block';go.style.display='none';return;}
+  empty.style.display='none';
+  go.style.display='block';
   list.innerHTML=tasks.map(t=>`
-    <div class="task-item">
-      <div class="dot ${t.done?'done':'task'}"></div>
-      <div class="task-name ${t.done?'done':''}">${t.name}</div>
-      <div class="task-meta">${fmtTime(fromMins(t.startMins))} – ${fmtTime(fromMins(t.startMins+t.dur))} · ${fmtDur(t.dur)}</div>
-      <div style="display:flex;gap:6px;margin-left:auto">
-        <button class="btn btn-sm ${t.done?'':'btn-success'}" onclick="toggleDone(${t.id})">
-          <i class="ti ti-${t.done?'rotate-clockwise':'circle-check'}" aria-hidden="true"></i> ${t.done?'Undo':'Done'}
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})">
-          <i class="ti ti-trash" aria-hidden="true"></i>
-        </button>
-      </div>
+    <div class="unscheduled-item">
+      <div class="dot ${t.done?'dot-done':'dot-task'}"></div>
+      <div class="task-name-lbl">${t.name}</div>
+      <div class="task-dur-lbl">${fmtDur(t.dur)}</div>
+      ${t.startMins!==null?`<span class="badge-scheduled"><i class="ti ti-clock" aria-hidden="true" style="font-size:11px;margin-right:3px;vertical-align:-1px"></i>${fmtTime(fromMins(t.startMins))}</span>`:'<span class="badge-unscheduled">unscheduled</span>'}
+      <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})" aria-label="Remove"><i class="ti ti-trash" aria-hidden="true"></i></button>
     </div>
   `).join('');
+}
+
+function renderPhase2(){
+  const list=document.getElementById('p2List');
+  const empty=document.getElementById('p2Empty');
+  const go=document.getElementById('goStep3Wrap');
+  if(tasks.length===0){list.innerHTML='';empty.style.display='block';go.style.display='none';return;}
+  empty.style.display='none';
+  const allScheduled=tasks.every(t=>t.startMins!==null);
+  go.style.display=allScheduled?'block':'none';
+  list.innerHTML=tasks.map(t=>{
+    const isEditing=editingId===t.id;
+    const scheduled=t.startMins!==null;
+    return `<div class="unscheduled-item${isEditing?' scheduling':''}">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div class="dot ${scheduled?'dot-task':'dot-done'}"></div>
+          <div class="task-name-lbl">${t.name}</div>
+          <div class="task-dur-lbl">${fmtDur(t.dur)}</div>
+          ${scheduled?`<span class="badge-scheduled">${fmtTime(fromMins(t.startMins))} – ${fmtTime(fromMins(t.startMins+t.dur))}</span>`:'<span class="badge-unscheduled">unscheduled</span>'}
+        </div>
+        ${isEditing?`<div class="inline-time-row">
+          <label style="font-size:12px;color:#888">Start at</label>
+          <input type="time" id="timeInput_${t.id}" value="${scheduled?fromMins(t.startMins):''}"/>
+          <button class="btn btn-sm btn-accent" onclick="assignTime(${t.id})"><i class="ti ti-check" aria-hidden="true"></i> Assign</button>
+          ${scheduled?`<button class="btn btn-sm btn-danger" onclick="clearTime(${t.id})"><i class="ti ti-x" aria-hidden="true"></i> Clear</button>`:''}
+        </div>`:''}
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn btn-sm ${isEditing?'btn-warn':'btn-accent'}" onclick="startEditing(${t.id})" aria-label="${isEditing?'Cancel':'Set time'}">
+          <i class="ti ti-${isEditing?'x':'clock'}" aria-hidden="true"></i> ${isEditing?'Cancel':'Set time'}
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})" aria-label="Remove"><i class="ti ti-trash" aria-hidden="true"></i></button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderTimeline(){
   const tl=document.getElementById('timeline');
   if(!windowStart||!windowEnd){
-    tl.innerHTML='<div class="free-placeholder"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set your time window to get started</div>';
+    tl.innerHTML='<div class="empty-state"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set your time window first.</div>';
     return;
   }
-  const ws=toMins(windowStart), we=toMins(windowEnd), nm=nowMins();
-  const nowInWindow=nm>=ws&&nm<=we;
-
-  let segments=[], cursor=ws;
-  for(const t of tasks){
-    if(t.startMins>cursor) segments.push({type:'free',start:cursor,end:t.startMins});
-    segments.push({type:'task',start:t.startMins,end:t.startMins+t.dur,task:t});
+  const scheduled=tasks.filter(t=>t.startMins!==null).sort((a,b)=>a.startMins-b.startMins);
+  const ws=toMins(windowStart),we=toMins(windowEnd),nm=nowMins(),ns=nowSecs();
+  let segs=[],cursor=ws;
+  for(const t of scheduled){
+    if(t.startMins>cursor) segs.push({type:'free',start:cursor,end:t.startMins});
+    segs.push({type:'task',start:t.startMins,end:t.startMins+t.dur,task:t});
     cursor=t.startMins+t.dur;
   }
-  if(cursor<we) segments.push({type:'free',start:cursor,end:we});
-
-  if(segments.length===0){
-    tl.innerHTML='<div class="free-placeholder"><i class="ti ti-clock" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>All free — add some tasks!</div>';
-    return;
-  }
-
-  const ns=nowSecs();
-
-  tl.innerHTML=segments.map(s=>{
+  if(cursor<we) segs.push({type:'free',start:cursor,end:we});
+  if(segs.length===0){tl.innerHTML='<div class="empty-state"><i class="ti ti-clock" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>No scheduled tasks yet — schedule tasks in step 2.</div>';return;}
+  tl.innerHTML=segs.map(s=>{
     const dur=s.end-s.start;
-    const timeRange=fmtTime(fromMins(s.start))+' – '+fmtTime(fromMins(s.end));
-    const isPast=nm>=s.end;
-    const isActiveNow=nm>=s.start&&nm<s.end;
-
+    const tr=fmtTime(fromMins(s.start))+' – '+fmtTime(fromMins(s.end));
+    const isPast=nm>=s.end,isNow=nm>=s.start&&nm<s.end;
     if(s.type==='free'){
-      let remainTxt='';
-      if(isActiveNow){
-        const remMins=s.end-nm;
-        remainTxt=`<span style="font-size:12px;color:#5ecfa8;margin-left:6px">${fmtDur(remMins)} left</span>`;
-      }
       return `<div class="segment free${isPast?' past':''}">
-        <div class="dot ${isPast?'done':'free'}"></div>
-        <div>
-          <div class="seg-label">Free time${remainTxt}</div>
-          <div class="seg-time">${timeRange}</div>
-        </div>
+        <div class="dot dot-free"></div>
+        <div><div class="seg-label free-lbl">Free time${isNow?` <span style="font-size:12px;color:#5ecfa8">${fmtDur(s.end-nm)} left</span>`:''}</div><div class="seg-time">${tr}</div></div>
         <div class="seg-dur">${fmtDur(dur)}</div>
-      </div>`;
-    } else {
-      const t=s.task;
-      let progressBar='';
-      if(isActiveNow&&!t.done){
-        const elapsedSecs=ns-(s.start*60);
-        const totalSecs=dur*60;
-        const pct=Math.min(100,Math.max(0,(elapsedSecs/totalSecs)*100));
-        const remMins=s.end-nm;
-        progressBar=`<div style="font-size:12px;color:#aec0ff;margin-top:4px">${fmtDur(remMins)} remaining</div>
-          <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct.toFixed(1)}%"></div></div>`;
-      }
-      const activeClass=isActiveNow&&!t.done?' active-now':'';
-      const pastClass=isPast&&!t.done?' past':'';
-      return `<div class="segment task-seg${t.done?' done':activeClass+pastClass}">
-        <div class="dot ${t.done?'done':isActiveNow?'now':'task'}"></div>
-        <div style="flex:1">
-          <div class="seg-label">${t.name}${isActiveNow&&!t.done?'<span style="font-size:11px;background:#f0b42922;color:#f0b429;border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:1px">now</span>':''}</div>
-          <div class="seg-time">${timeRange}</div>
-          ${progressBar}
-        </div>
-        <div class="seg-dur">${fmtDur(dur)}</div>
-        <div class="seg-actions">
-          <button class="btn btn-sm ${t.done?'':'btn-success'}" onclick="toggleDone(${t.id})">
-            <i class="ti ti-${t.done?'rotate-clockwise':'circle-check'}" aria-hidden="true"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})">
-            <i class="ti ti-trash" aria-hidden="true"></i>
-          </button>
-        </div>
       </div>`;
     }
+    const t=s.task;
+    let bar='';
+    if(isNow&&!t.done){
+      const pct=Math.min(100,((ns-s.start*60)/(dur*60))*100);
+      bar=`<div style="font-size:12px;color:#aec0ff;margin-top:4px">${fmtDur(s.end-nm)} remaining</div><div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct.toFixed(1)}%"></div></div>`;
+    }
+    const cls=t.done?' done':(isNow?' active-now':(isPast?' past':''));
+    return `<div class="segment task-seg${cls}">
+      <div class="dot ${t.done?'dot-done':isNow?'dot-now':'dot-task'}"></div>
+      <div style="flex:1">
+        <div class="seg-label ${t.done?'done-lbl':'task-lbl'}">${t.name}${isNow&&!t.done?' <span style="font-size:11px;background:#f0b42922;color:#f0b429;border-radius:4px;padding:1px 6px">now</span>':''}</div>
+        <div class="seg-time">${tr}</div>${bar}
+      </div>
+      <div class="seg-dur">${fmtDur(dur)}</div>
+      <div class="seg-actions">
+        <button class="btn btn-sm ${t.done?'':'btn-success'}" onclick="toggleDone(${t.id})" aria-label="${t.done?'Undo':'Done'}"><i class="ti ti-${t.done?'rotate-clockwise':'circle-check'}" aria-hidden="true"></i></button>
+        <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})" aria-label="Remove"><i class="ti ti-trash" aria-hidden="true"></i></button>
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -315,6 +379,6 @@ function renderTimeline(){
   const now=new Date();
   document.getElementById('startTime').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
   tick();
-  tickInterval=setInterval(tick,1000);
+  setInterval(tick,1000);
 })();
 </script>
