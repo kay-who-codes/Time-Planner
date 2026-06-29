@@ -1,0 +1,286 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{padding:1rem;background:#111;min-height:100vh;color:#e8e8e6}
+.top-bar{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+.top-bar h1{font-size:18px;font-weight:500;color:#e8e8e6;margin-bottom:.75rem}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.row label{font-size:13px;color:#888;white-space:nowrap}
+input[type="time"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px}
+input[type="time"]:focus{outline:none;border-color:#6b8fff}
+input[type="text"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px;width:180px}
+input[type="text"]:focus{outline:none;border-color:#6b8fff}
+input[type="number"]{background:#252525;border:0.5px solid #444;border-radius:8px;color:#e8e8e6;padding:6px 10px;font-size:14px;height:36px;width:80px}
+input[type="number"]:focus{outline:none;border-color:#6b8fff}
+.btn{background:#252525;border:0.5px solid #555;border-radius:8px;color:#e8e8e6;padding:0 14px;font-size:13px;height:36px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.btn:hover{background:#333}
+.btn:active{transform:scale(.98)}
+.btn-accent{background:#2d3f7a;border-color:#4a62cc;color:#aec0ff}
+.btn-accent:hover{background:#374a8f}
+.btn-sm{height:28px;padding:0 10px;font-size:12px;border-radius:6px}
+.btn-danger{background:#3a1a1a;border-color:#6e2e2e;color:#f09595}
+.btn-danger:hover{background:#4a2020}
+.btn-success{background:#1a3020;border-color:#2e6e40;color:#7ee8a2}
+.btn-success:hover{background:#204030}
+.totals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.metric{background:#1a1a1a;border:0.5px solid #333;border-radius:10px;padding:.85rem 1rem}
+.metric .lbl{font-size:12px;color:#666;margin-bottom:4px}
+.metric .val{font-size:22px;font-weight:500}
+.metric .val.task{color:#6b8fff}
+.metric .val.free{color:#5ecfa8}
+.section-label{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.timeline{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem;margin-bottom:1rem}
+.segment{border-radius:8px;padding:10px 14px;margin-bottom:6px;position:relative;display:flex;align-items:center;gap:12px}
+.segment:last-child{margin-bottom:0}
+.segment.free{background:#1d2520;border:0.5px solid #2a3d2f}
+.segment.free .seg-label{color:#5ecfa8;font-size:14px;font-weight:500}
+.segment.task-seg{background:#1e2240;border:0.5px solid #2e3a6e}
+.segment.task-seg.done{background:#222;border-color:#333;opacity:.65}
+.segment.task-seg .seg-label{color:#aec0ff;font-size:14px;font-weight:500}
+.segment.task-seg.done .seg-label{text-decoration:line-through;color:#666}
+.seg-time{font-size:12px;color:#555;min-width:120px}
+.seg-dur{font-size:12px;color:#666;margin-left:auto;white-space:nowrap}
+.seg-actions{display:flex;gap:6px;margin-left:8px}
+.add-task-panel{background:#1a1a1a;border:0.5px solid #333;border-radius:12px;padding:1rem;margin-bottom:1rem}
+.no-window{text-align:center;padding:2rem;color:#555;font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot.free{background:#5ecfa8}
+.dot.task{background:#6b8fff}
+.dot.done{background:#444}
+.free-placeholder{padding:2rem;text-align:center;color:#444;font-size:13px}
+.task-list{margin-bottom:1rem}
+.task-item{background:#1a1a1a;border:0.5px solid #333;border-radius:10px;padding:.75rem 1rem;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.task-name{font-size:14px;font-weight:500;color:#e8e8e6;flex:1;min-width:120px}
+.task-name.done{text-decoration:line-through;color:#555}
+.task-meta{font-size:12px;color:#666}
+.conflict{background:#2a1a1a;border:0.5px solid #6e2e2e;border-radius:8px;padding:8px 12px;font-size:12px;color:#f09595;margin-bottom:.75rem}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Time planner — add tasks and see your schedule for the day</h2>
+
+<div class="app">
+  <div class="top-bar">
+    <h1><i class="ti ti-clock" aria-hidden="true" style="margin-right:8px;font-size:18px;vertical-align:-2px"></i>Time planner</h1>
+    <div class="row">
+      <label>Window start</label>
+      <input type="time" id="startTime" />
+      <label>Window end</label>
+      <input type="time" id="endTime" />
+      <button class="btn btn-accent" onclick="setWindow()"><i class="ti ti-check" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>Set window</button>
+    </div>
+    <div id="windowInfo" style="margin-top:.6rem;font-size:13px;color:#666"></div>
+  </div>
+
+  <div class="totals">
+    <div class="metric">
+      <div class="lbl">Total task time</div>
+      <div class="val task" id="totalTask">0h 0m</div>
+    </div>
+    <div class="metric">
+      <div class="lbl">Total free time</div>
+      <div class="val free" id="totalFree">—</div>
+    </div>
+  </div>
+
+  <div class="add-task-panel">
+    <div class="section-label" style="margin-bottom:.75rem">Add task</div>
+    <div id="conflictMsg"></div>
+    <div class="row" style="flex-wrap:wrap;gap:8px">
+      <input type="text" id="taskName" placeholder="Task name" />
+      <input type="number" id="taskDur" placeholder="mins" min="1" max="1440" />
+      <label style="font-size:13px;color:#888">starting at</label>
+      <input type="time" id="taskStart" />
+      <button class="btn btn-accent" onclick="addTask()"><i class="ti ti-plus" aria-hidden="true" style="font-size:13px;margin-right:4px;vertical-align:-1px"></i>Add task</button>
+    </div>
+  </div>
+
+  <div id="taskListSection" style="display:none">
+    <div class="section-label">Tasks</div>
+    <div class="task-list" id="taskList"></div>
+  </div>
+
+  <div class="section-label">Timeline</div>
+  <div class="timeline" id="timeline">
+    <div class="free-placeholder"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set your time window to get started</div>
+  </div>
+</div>
+
+<script>
+let windowStart = null, windowEnd = null;
+let tasks = [];
+
+function toMins(timeStr){
+  const [h,m]=timeStr.split(':').map(Number);
+  return h*60+m;
+}
+function fromMins(mins){
+  const h=Math.floor(mins/60)%24;
+  const m=mins%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function fmtDur(mins){
+  const h=Math.floor(mins/60), m=mins%60;
+  if(h===0) return m+'m';
+  if(m===0) return h+'h';
+  return h+'h '+m+'m';
+}
+function fmtTime(timeStr){
+  const [h,m]=timeStr.split(':').map(Number);
+  const ampm=h>=12?'pm':'am';
+  const h12=h%12||12;
+  return h12+':'+(String(m).padStart(2,'0'))+ampm;
+}
+
+function setWindow(){
+  const s=document.getElementById('startTime').value;
+  const e=document.getElementById('endTime').value;
+  if(!s||!e){alert('Please set both start and end times.');return;}
+  const sm=toMins(s), em=toMins(e);
+  if(em<=sm){alert('End time must be after start time.');return;}
+  windowStart=s; windowEnd=e;
+  tasks=tasks.filter(t=>t.startMins>=sm && t.startMins+t.dur<=em);
+  document.getElementById('windowInfo').textContent='Window: '+fmtTime(s)+' → '+fmtTime(e)+' ('+fmtDur(em-sm)+" total)";
+  render();
+}
+
+function addTask(){
+  if(!windowStart||!windowEnd){alert('Set your time window first.');return;}
+  const name=document.getElementById('taskName').value.trim();
+  const dur=parseInt(document.getElementById('taskDur').value);
+  const start=document.getElementById('taskStart').value;
+  document.getElementById('conflictMsg').innerHTML='';
+  if(!name){alert('Enter a task name.');return;}
+  if(!dur||dur<1){alert('Enter a duration in minutes.');return;}
+  if(!start){alert('Enter a start time for the task.');return;}
+  const sm=toMins(start), wm=toMins(windowStart), em=toMins(windowEnd);
+  if(sm<wm||sm+dur>em){
+    document.getElementById('conflictMsg').innerHTML='<div class="conflict"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Task falls outside the time window ('+fmtTime(windowStart)+' – '+fmtTime(windowEnd)+').</div>';
+    return;
+  }
+  for(const t of tasks){
+    if(!(sm>=t.startMins+t.dur || sm+dur<=t.startMins)){
+      document.getElementById('conflictMsg').innerHTML='<div class="conflict"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:4px;vertical-align:-1px"></i>Overlaps with "'+t.name+'" ('+fmtTime(fromMins(t.startMins))+' – '+fmtTime(fromMins(t.startMins+t.dur))+').</div>';
+      return;
+    }
+  }
+  tasks.push({id:Date.now(),name,dur,startMins:sm,done:false});
+  tasks.sort((a,b)=>a.startMins-b.startMins);
+  document.getElementById('taskName').value='';
+  document.getElementById('taskDur').value='';
+  document.getElementById('taskStart').value='';
+  render();
+}
+
+function removeTask(id){
+  tasks=tasks.filter(t=>t.id!==id);
+  render();
+}
+
+function toggleDone(id){
+  const t=tasks.find(t=>t.id===id);
+  if(t) t.done=!t.done;
+  render();
+}
+
+function render(){
+  renderTotals();
+  renderTimeline();
+  renderTaskList();
+}
+
+function renderTotals(){
+  const taskMins=tasks.reduce((s,t)=>s+t.dur,0);
+  document.getElementById('totalTask').textContent=fmtDur(taskMins);
+  if(windowStart&&windowEnd){
+    const wm=toMins(windowEnd)-toMins(windowStart);
+    const free=wm-taskMins;
+    document.getElementById('totalFree').textContent=fmtDur(Math.max(0,free));
+  } else {
+    document.getElementById('totalFree').textContent='—';
+  }
+}
+
+function renderTaskList(){
+  const sec=document.getElementById('taskListSection');
+  const list=document.getElementById('taskList');
+  if(tasks.length===0){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=tasks.map(t=>`
+    <div class="task-item">
+      <div class="dot ${t.done?'done':'task'}"></div>
+      <div class="task-name ${t.done?'done':''}">${t.name}</div>
+      <div class="task-meta">${fmtTime(fromMins(t.startMins))} – ${fmtTime(fromMins(t.startMins+t.dur))} · ${fmtDur(t.dur)}</div>
+      <div style="display:flex;gap:6px;margin-left:auto">
+        <button class="btn btn-sm ${t.done?'':'btn-success'}" onclick="toggleDone(${t.id})" aria-label="${t.done?'Mark incomplete':'Mark complete'}">
+          <i class="ti ti-${t.done?'rotate-clockwise':'circle-check'}" aria-hidden="true"></i> ${t.done?'Undo':'Done'}
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})" aria-label="Remove task">
+          <i class="ti ti-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTimeline(){
+  const tl=document.getElementById('timeline');
+  if(!windowStart||!windowEnd){
+    tl.innerHTML='<div class="free-placeholder"><i class="ti ti-calendar-off" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>Set your time window to get started</div>';
+    return;
+  }
+  const ws=toMins(windowStart), we=toMins(windowEnd);
+  let segments=[], cursor=ws;
+  for(const t of tasks){
+    if(t.startMins>cursor){
+      segments.push({type:'free',start:cursor,end:t.startMins});
+    }
+    segments.push({type:'task',start:t.startMins,end:t.startMins+t.dur,task:t});
+    cursor=t.startMins+t.dur;
+  }
+  if(cursor<we) segments.push({type:'free',start:cursor,end:we});
+  if(segments.length===0){
+    tl.innerHTML='<div class="free-placeholder"><i class="ti ti-clock" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:8px"></i>All free — add some tasks!</div>';
+    return;
+  }
+  tl.innerHTML=segments.map(s=>{
+    const dur=s.end-s.start;
+    const timeRange=fmtTime(fromMins(s.start))+' – '+fmtTime(fromMins(s.end));
+    if(s.type==='free'){
+      return `<div class="segment free">
+        <div class="dot free"></div>
+        <div>
+          <div class="seg-label">Free time</div>
+          <div class="seg-time">${timeRange}</div>
+        </div>
+        <div class="seg-dur">${fmtDur(dur)}</div>
+      </div>`;
+    } else {
+      const t=s.task;
+      return `<div class="segment task-seg${t.done?' done':''}">
+        <div class="dot ${t.done?'done':'task'}"></div>
+        <div style="flex:1">
+          <div class="seg-label">${t.name}</div>
+          <div class="seg-time">${timeRange}</div>
+        </div>
+        <div class="seg-dur">${fmtDur(dur)}</div>
+        <div class="seg-actions">
+          <button class="btn btn-sm ${t.done?'':'btn-success'}" onclick="toggleDone(${t.id})" aria-label="${t.done?'Mark incomplete':'Mark complete'}">
+            <i class="ti ti-${t.done?'rotate-clockwise':'circle-check'}" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="removeTask(${t.id})" aria-label="Remove task">
+            <i class="ti ti-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+(function init(){
+  const now=new Date();
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('startTime').value=hh+':'+mm;
+})();
+</script>
